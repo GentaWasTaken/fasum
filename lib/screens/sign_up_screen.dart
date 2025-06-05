@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fasum/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fasum/l10n/app_localizations.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,7 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).signUp)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -37,14 +38,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   TextFormField(
                     controller: _fullNameController,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Full Name',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context).fullName,
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.person),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your full name';
+                        return AppLocalizations.of(context).pleaseEnterFullName;
                       }
                       return null;
                     },
@@ -53,8 +54,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context).email,
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.email),
                     ),
@@ -62,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (value == null ||
                           value.isEmpty ||
                           !_isValidEmail(value)) {
-                        return 'Please enter a valid email';
+                        return AppLocalizations.of(context).pleaseEnterValidEmail;
                       }
                       return null;
                     },
@@ -71,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: AppLocalizations.of(context).password,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -90,10 +91,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: !_isPasswordVisible,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
+                        return AppLocalizations.of(context).pleaseEnterPassword;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return AppLocalizations.of(context).passwordTooShort;
                       }
                       return null;
                     },
@@ -102,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   TextFormField(
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
-                      labelText: 'Confirm Password',
+                      labelText: AppLocalizations.of(context).confirmPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
@@ -122,10 +123,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: !_isConfirmPasswordVisible,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return AppLocalizations.of(context).pleaseConfirmPassword;
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return AppLocalizations.of(context).passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -135,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
                         onPressed: _signUp,
-                        child: const Text('Sign Up'),
+                        child: Text(AppLocalizations.of(context).signUp),
                       ),
                 ],
               ),
@@ -172,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on FirebaseAuthException catch (error) {
       _showErrorMessage(_getAuthErrorMessage(error.code));
     } catch (error) {
-      _showErrorMessage('An error occurred: $error');
+      _showErrorMessage(AppLocalizations.of(context).errorOccurred(error.toString()));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -193,13 +194,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _getAuthErrorMessage(String code) {
     switch (code) {
       case 'weak-password':
-        return 'The password provided is too weak.';
+        return AppLocalizations.of(context).weakPassword;
       case 'email-already-in-use':
-        return 'The account already exists for that email.';
+        return AppLocalizations.of(context).emailAlreadyInUse;
       case 'invalid-email':
-        return 'The email address is not valid.';
+        return AppLocalizations.of(context).invalidEmail;
       default:
-        return 'An error occurred. Please try again.';
+        return AppLocalizations.of(context).genericError;
     }
   }
 
